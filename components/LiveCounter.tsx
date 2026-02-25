@@ -23,7 +23,7 @@ export function LiveCounter() {
         // 全ユーザーのプレゼンス状態を取得
         const newState = channel.presenceState();
         // 重複を除いた接続数をカウント
-        const count = Object.keys(newState).length;
+        const totalConnections = Object.values(newState).flat().length;
         setActiveCount(count);
       })
       .on("presence", { event: "join" }, ({ newPresences }) => {
