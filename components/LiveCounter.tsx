@@ -24,7 +24,7 @@ export function LiveCounter() {
         const newState = channel.presenceState();
         // 重複を除いた接続数をカウント
         const totalConnections = Object.values(newState).flat().length;
-        setActiveCount(count);
+        setActiveCount(totalConnections);
       })
       .on("presence", { event: "join" }, ({ newPresences }) => {
         console.log("新規プレイヤーが参加しました", newPresences);
