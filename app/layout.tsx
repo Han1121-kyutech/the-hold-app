@@ -1,29 +1,29 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'THE HOLD - Real-time Endurance Challenge',
-  description: 'Test your endurance in this real-time multiplayer challenge. Hold as long as you can and compete for the top spot on the global leaderboard.',
+  title: "THE HOLD - 限界耐久チャレンジ", // タイトルも少し日本語を入れてみました
+  description:
+    "世界中の暇なプレイヤーとリアルタイムで耐久時間を競い合え。指を離したら終わりのサバイバル。",
   openGraph: {
     images: [
       {
-        url: 'https://bolt.new/static/og_default.png',
+        url: "/og-image.png", // ← ここを自分の画像ファイル名にする！
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     images: [
       {
-        url: 'https://bolt.new/static/og_default.png',
+        url: "/og-image.png", // ← ここも同じく！
       },
     ],
   },
 };
-
 export default function RootLayout({
   children,
 }: {
