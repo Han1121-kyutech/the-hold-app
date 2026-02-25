@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: "/og-image.png", // ← ここを自分の画像ファイル名にする！
+        url: "https://the-hold-app.vercel.app/og-image.png", // ← ここを自分の画像ファイル名にする！
       },
     ],
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [
       {
-        url: "/og-image.png", // ← ここも同じく！
+        url: "https://the-hold-app.vercel.app/og-image.png", // ← ここも同じく！
       },
     ],
   },
