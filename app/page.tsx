@@ -28,17 +28,18 @@ export default function Home() {
   }, []);
 
   const handleDurationUpdate = (duration: number) => {
-    // 1秒(1000ms)未満の記録はランキングに載せない（スパム防止）
+    // 1秒未満は保存しない（誤操作防止）
     if (duration < 1000) return;
 
-    // 自己ベストを更新した、あるいはまだ自己ベストがない場合
-    if (duration > personalBest || personalBest === 0) {
+    // 自己ベストに関係なく、1秒以上耐えたら保存ダイアログを出す
+    // （または duration > personalBest の条件を外す）
+    setNewRecordDuration(duration);
+    setShowNamePrompt(true);
+
+    // 自己ベストの表示だけ更新しておく
+    if (duration > personalBest) {
       setPersonalBest(duration);
       localStorage.setItem("personalBest", duration.toString());
-
-      // ポップアップを出して名前を入力させる
-      setNewRecordDuration(duration);
-      setShowNamePrompt(true);
     }
   };
   const submitScore = async () => {
