@@ -1,40 +1,43 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Users } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Users } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export function LiveCounter() {
   const [activeCount, setActiveCount] = useState<number>(0);
 
   useEffect(() => {
-    const fetchActiveCount = async () => {
-      const { count } = await supabase
-        .from('game_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
-
-      setActiveCount(count || 0);
-    };
-
-    fetchActiveCount();
-
-    const channel = supabase
-      .channel('active-sessions')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'game_sessions',
-          filter: 'is_active=eq.true',
+    // プレゼンス（今いる人を数える）用のチャンネルを作成
+    const channel = supabase.channel("online-users", {
+      config: {
+        presence: {
+          key: "user",
         },
-        () => {
-          fetchActiveCount();
+      },
+    });
+
+    channel
+      .on("presence", { event: "sync" }, () => {
+        // 全ユーザーのプレゼンス状態を取得
+        const newState = channel.presenceState();
+        // 重複を除いた接続数をカウント
+        const count = Object.keys(newState).length;
+        setActiveCount(count);
+      })
+      .on("presence", { event: "join" }, ({ newPresences }) => {
+        console.log("新規プレイヤーが参加しました", newPresences);
+      })
+      .on("presence", { event: "leave" }, ({ leftPresences }) => {
+        console.log("プレイヤーが退出しました", leftPresences);
+      })
+      .subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          // チャンネルに参加したことを自分自身も報告
+          await channel.track({ online_at: new Date().toISOString() });
         }
-      )
-      .subscribe();
+      });
 
     return () => {
       supabase.removeChannel(channel);
@@ -54,9 +57,9 @@ export function LiveCounter() {
         </span>
         <motion.span
           key={activeCount}
-          initial={{ scale: 1.2, color: '#f59e0b' }}
-          animate={{ scale: 1, color: '#d1d5db' }}
-          className="text-2xl font-bold"
+          initial={{ scale: 1.2, color: "#f59e0b" }}
+          animate={{ scale: 1, color: "#d1d5db" }}
+          className="text-2xl font-bold font-mono"
         >
           {activeCount}
         </motion.span>
